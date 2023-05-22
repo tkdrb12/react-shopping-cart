@@ -1,22 +1,30 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import Main from './pages/Main';
-import { RecoilRoot } from 'recoil';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Layout } from './layout';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { RecoilRoot } from "recoil";
+import { App } from "./App";
+import { GlobalStyle } from "./GlobalStyle";
+import { worker } from "./mocks/browser";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const main = async () => {
+  if (window.location.pathname === "/react-shopping-cart") {
+    window.location.pathname = "/react-shopping-cart/";
+    return;
+  }
+
+  await worker.start({
+    serviceWorker: {
+      url: "/react-shopping-cart/mockServiceWorker.js",
+    },
+  });
+};
+main();
+
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(
   <React.StrictMode>
     <RecoilRoot>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="/test" element={<Layout>테스트</Layout>} />
-        </Routes>
-      </BrowserRouter>
+      <GlobalStyle />
+      <App />
     </RecoilRoot>
   </React.StrictMode>
 );
